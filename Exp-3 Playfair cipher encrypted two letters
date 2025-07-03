@@ -1,0 +1,66 @@
+def create_matrix(key):
+    key = key.upper().replace('J', 'I')  # Replace 'J' with 'I'
+    seen = set()
+    matrix = []
+
+    for char in key:
+        if char not in seen and char.isalpha():
+            seen.add(char)
+            matrix.append(char)
+
+    # Fill the matrix with remaining letters
+    for char in range(ord('A'), ord('Z') + 1):
+        if chr(char) not in seen and chr(char) != 'J':
+            matrix.append(chr(char))
+
+    # Create a 5x5 matrix
+    return [matrix[i:i + 5] for i in range(0, 25, 5)]
+
+def find_position(char, matrix):
+    for i, row in enumerate(matrix):
+        if char in row:
+            return i, row.index(char)
+    return None
+
+def encrypt_pair(a, b, matrix):
+    r1, c1 = find_position(a, matrix)
+    r2, c2 = find_position(b, matrix)
+    
+    if r1 == r2:  # Same row
+        return matrix[r1][(c1 + 1) % 5], matrix[r2][(c2 + 1) % 5]
+    elif c1 == c2:  # Same column
+        return matrix[(r1 + 1) % 5][c1], matrix[(r2 + 1) % 5][c2]
+    else:  # Rectangle
+        return matrix[r1][c2], matrix[r2][c1]
+
+def playfair_encrypt(plaintext, key):
+    matrix = create_matrix(key)
+    plaintext = plaintext.upper().replace('J', 'I').replace(' ', '')
+    
+    # Prepare plaintext pairs
+    pairs = []
+    i = 0
+    while i < len(plaintext):
+        a = plaintext[i]
+        b = 'X' if i + 1 >= len(plaintext) else plaintext[i + 1]
+        if a == b:  # Same letter pair
+            b = 'X'
+            pairs.append((a, b))
+            i += 1  # Only move one step
+        else:
+            pairs.append((a, b))
+            i += 2  # Move two steps
+    
+    # Encrypt pairs
+    result = []
+    for a, b in pairs:
+        encrypted_pair = encrypt_pair(a, b, matrix)
+        result.extend(encrypted_pair)
+    
+    return ''.join(result)
+
+# Example usage
+key = "KEYWORD"
+plaintext = "HELLO WORLD"
+encrypted_text = playfair_encrypt(plaintext, key)
+print(f"Encrypted: {encrypted_text}")
