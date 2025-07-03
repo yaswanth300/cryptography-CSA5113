@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <string.h>
+char substitute(char ch) 
+{
+    switch(ch) {
+        case '5': return 'H';
+        case '3': return 'E';
+        case '2': return 'L';
+        case '1': return 'L';
+        case '0': return 'O';
+        case '6': return ' ';  
+        case '7': return 'S';
+        case '8': return 'W';
+        case '9': return 'E';
+        case ')': return 'T';
+        case '!': return 'H';
+        case '@': return 'A';
+        default: return ch;
+    }
+}
+int main() 
+{
+    char ciphertext[500];
+    printf("Enter the ciphertext:\n");
+    scanf("%[^\n]%*c", ciphertext); 
+    printf("\nDecrypted text:\n");
+    for (int i = 0; i < strlen(ciphertext); i++) 
+	{
+        printf("%c", substitute(ciphertext[i]));
+    }
+    printf("\n");
+    return 0;
+}
