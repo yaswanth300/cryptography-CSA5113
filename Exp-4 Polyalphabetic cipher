@@ -1,0 +1,19 @@
+def vigenere_encrypt(plaintext, key):
+    key = (key * (len(plaintext) // len(key) + 1))[:len(plaintext)].upper()
+    ciphertext = []
+    
+    for p, k in zip(plaintext.upper(), key):
+        if p.isalpha():
+            shift = ord(k) - ord('A')
+            encrypted_char = chr((ord(p) - ord('A') + shift) % 26 + ord('A'))
+            ciphertext.append(encrypted_char)
+        else:
+            ciphertext.append(p)  # Non-alphabetic characters are added unchanged
+
+    return ''.join(ciphertext)
+
+# Example usage
+plaintext = "HELLO WORLD"
+key = "KEY"
+encrypted_text = vigenere_encrypt(plaintext, key)
+print(f"Encrypted: {encrypted_text}")
