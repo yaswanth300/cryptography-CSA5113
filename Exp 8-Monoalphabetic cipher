@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define ALPHABET_LEN 26
+void generateCipherAlphabet(char *keyword, char *cipherAlphabet) {
+    int used[26] = {0};
+    int idx = 0;
+    for (int i = 0; keyword[i] != '\0'; i++) {
+        char ch = toupper(keyword[i]);
+        if (isalpha(ch) && !used[ch - 'A']) {
+            cipherAlphabet[idx++] = ch;
+            used[ch - 'A'] = 1;
+        }
+    }
+    for (char ch = 'A'; ch <= 'Z'; ch++) {
+        if (!used[ch - 'A']) {
+            cipherAlphabet[idx++] = ch;
+        }
+    }
+    cipherAlphabet[idx] = '\0';
+}
+void encrypt (const char *plaintext, char *ciphertext, const char *cipherAlphabet) {
+    for (int i = 0; plaintext[i] != '\0'; i++) {
+        char ch = toupper(plaintext[i]);
+        if (isalpha(ch)) {
+            ciphertext[i] = cipherAlphabet[ch - 'A'];
+        } else {
+            ciphertext[i] = plaintext[i];
+        }
+    }
+    ciphertext[strlen(plaintext)] = '\0';
+}
+void decrypt (const char *ciphertext, char *plaintext, const char *cipherAlphabet) {
+    for (int i = 0; ciphertext[i] != '\0'; i++) {
+        char ch = toupper(ciphertext[i]);
+        if (isalpha(ch)) {
+            for (int j = 0; j < 26; j++) {
+                if (cipherAlphabet[j] == ch) {
+                    plaintext[i] = 'A' + j;
+                    break;
+                }
+            }
+        } else {
+            plaintext[i] = ciphertext[i];
+        }
+    }
+    plaintext[strlen(ciphertext)] = '\0';
+}
+int main () {
+    char keyword [100];
+    char cipherAlphabet[27];
+    char plaintext [1000], ciphertext [1000], decrypted [1000];
+
+    printf("Enter keyword: ");
+    scanf("%s", keyword);
+    generateCipherAlphabet(keyword, cipherAlphabet);
+    printf("Generated cipher alphabet:\n");
+    for (int i = 0; i < ALPHABET_LEN; i++)
+        printf("%c ", cipherAlphabet[i]);
+    printf("\n");
+    printf("Enter plaintext (only A-Z/a-z and spaces):\n");
+    getchar();
+    fgets(plaintext, sizeof(plaintext), stdin);
+    plaintext [strcspn(plaaintext, "\n")] = '\0';
+    encrypt (plaintext, ciphertext, cipherAlphabet);
+    printf("Encrypted text:\n%s\n", ciphertext);
+    decrypt (ciphertext, decrypted, cipherAlphabet);
+    printf("Decrypted text:\n%s\n", decrypted);
+    return 0;
+}
