@@ -1,0 +1,9 @@
+def monoalphabetic_cipher(text, key):
+    return ''.join(key[ord(char) - ord('A')] if char.isupper() else
+                   key[ord(char) - ord('a')].lower() if char.islower() else char
+                   for char in text)
+
+# Example usage
+plaintext = "Hello, World!"
+key = "QWERTYUIOPASDFGHJKLZXCVBNM"  # Substitution key
+print(f"Encrypted: {monoalphabetic_cipher(plaintext, key)}")
