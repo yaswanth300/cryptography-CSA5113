@@ -1,0 +1,12 @@
+def caesar_cipher(text, k):
+    return ''.join(
+        chr((ord(char) - 65 + k) % 26 + 65) if char.isupper() else
+        chr((ord(char) - 97 + k) % 26 + 97) if char.islower() else
+        char for char in text
+    )
+
+# Example usage
+plaintext = "Hello, World!"
+k = 3
+encrypted_text = caesar_cipher(plaintext, k)
+print(f"Encrypted: {encrypted_text}")
