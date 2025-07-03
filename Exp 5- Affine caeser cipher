@@ -1,0 +1,58 @@
+#include <stdio.h>
+int main() 
+{
+    char plaintext[100], ciphertext[100], decrypted[100];
+    int a, b, i, a_inv = -1;
+    printf("Enter the value of a : ");
+    scanf("%d", &a);
+    int temp_a = a, temp_b = 26;
+    while (temp_b != 0) 
+	{
+        int temp = temp_b;
+        temp_b = temp_a % temp_b;
+        temp_a = temp;
+    }
+    if (temp_a != 1)
+    {
+        printf("Error: 'a' must be co-prime with 26.\n");
+        return 1;
+    }
+    printf("Enter the value of b: ");
+    scanf("%d", &b);
+
+    printf("Enter the plaintext: ");
+    scanf("%s", plaintext);
+    for (i = 0; plaintext[i] != '\0'; i++) 
+	{
+        if (plaintext[i] >= 'a' && plaintext[i] <= 'z') 
+		{
+            ciphertext[i] = (a * (plaintext[i] - 'a') + b) % 26 + 'a';
+        } 
+		else 
+		{
+            printf("Invalid character in plaintext. Only lowercase letters are allowed.\n");
+            return 1;
+        }
+    }
+    ciphertext[i] = '\0';
+    printf("Ciphertext: %s\n", ciphertext);
+    for (int j = 1; j < 26; j++) 
+	{
+        if ((a * j) % 26 == 1) 
+		{
+            a_inv = j;
+            break;
+        }
+    }
+    if (a_inv == -1) {
+        printf("Modular inverse of a does not exist. Decryption not possible.\n");
+        return 1;
+    }
+    for (i = 0; ciphertext[i] != '\0'; i++) {
+        decrypted[i] = (a_inv * ((ciphertext[i] - 'a' - b + 26)) % 26) + 'a';
+    }
+    decrypted[i] = '\0';
+    printf("Decrypted text: %s\n", decrypted);
+
+    return 0;
+}
